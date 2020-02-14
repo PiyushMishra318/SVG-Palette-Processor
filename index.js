@@ -64,6 +64,7 @@ function generateDefObj(document, list) {
 
 function createDefElement(document, color, id) {
     var linearGradient = document.createElementNS("http://www.w3.org/2000/svg", 'linearGradient');
+    linearGradient.setAttribute("id", id);
     var stop = document.createElementNS("http://www.w3.org/2000/svg", 'stop');
     stop.setAttribute("stop-color", color);
     stop.setAttribute("offset", "100%");
