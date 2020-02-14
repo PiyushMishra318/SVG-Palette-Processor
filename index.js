@@ -31,7 +31,7 @@ if (process.argv[2]) {
                     var updated_svg_path = "updated_svg.svg";
                     fs.writeFileSync(updated_svg_path, svg_elem.outerHTML);
                     var output_colors = processPallette(new_pallette)
-                    console.log({ new_pallette: output_colors, updated_svg_path: __dirname + "\\" + updated_svg_path });
+                    console.log(JSON.stringify({ new_pallette: output_colors, svg: svg_elem.outerHTML, updated_svg_path: __dirname + "\\" + updated_svg_path }));
                 }).catch(err => {
                     console.log(err);
                 });
