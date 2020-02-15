@@ -22,8 +22,7 @@ if (process.argv[2]) {
                 output_svg: __dirname + "\\" + updated_svg_path,
                 output_json: __dirname + "\\" + "svg_json.json"
             });
-        }
-        else {
+        } else {
             console.log("Invalid file Path");
         }
     });
@@ -68,10 +67,10 @@ function findGradientColorsSvgElems(document) {
             if (stops && stops.length > 0) {
                 var stop_list = []
                 for (var stop of stops) {
-                    if (stop.hasAttribute("stop-color")
-                        && stop.getAttribute("stop-color") != "none"
-                        && stop.getAttribute("stop-color") != ""
-                        && !stop.getAttribute("stop-color").includes("url")) {
+                    if (stop.hasAttribute("stop-color") &&
+                        stop.getAttribute("stop-color") != "none" &&
+                        stop.getAttribute("stop-color") != "" &&
+                        !stop.getAttribute("stop-color").includes("url")) {
                         var id = `stop${++j}`;
                         var check = checkForExist(tag, convertToRGBA(stop.getAttribute("stop-color")), stop_list)
                         if (!check.hasOwnProperty("id")) {
@@ -84,17 +83,19 @@ function findGradientColorsSvgElems(document) {
                             stop.setAttribute("id", check.id)
                             console.log(`${check.id} has same color as a previous ${tag}`);
                         }
-                    } else if (stop.style['stop-color']
-                        && stop.style.getPropertyValue("stop-color") != ""
-                        && stop.style.getPropertyValue("stop-color") != "none"
-                        && !stop.style.getPropertyValue("stop-color").includes("url")) {
+                    } else if (stop.style['stop-color'] &&
+                        stop.style.getPropertyValue("stop-color") != "" &&
+                        stop.style.getPropertyValue("stop-color") != "none" &&
+                        !stop.style.getPropertyValue("stop-color").includes("url")) {
+                        stop.setAttribute("stop-color", stop.style.getPropertyValue("stop-color"));
+                        stop.style.setProperty("stop-color", "");
                         var id = `stop${++j}`;
-                        var check = checkForExist(tag, convertToRGBA(stop.style.getPropertyValue("stop-color")), stop_list)
+                        var check = checkForExist(tag, convertToRGBA(stop.getAttribute("stop-color")), stop_list)
                         if (!check.hasOwnProperty("id")) {
                             stop.setAttribute("id", id);
                             stop_list.push({
                                 id: id,
-                                color: convertToRGBA(stop.style.getPropertyValue("stop-color"))
+                                color: convertToRGBA(stop.getAttribute("stop-color"))
                             });
                         } else {
                             stop.setAttribute("id", check.id)
@@ -128,10 +129,10 @@ function findSolidColorSvgElems(document) {
         var elems = document.getElementsByTagName(tag)
         for (var elem of elems) {
             // can be improved furthur
-            if (elem.hasAttribute("fill")
-                && elem.getAttribute("fill") != "none"
-                && elem.getAttribute("fill") != ""
-                && !elem.getAttribute("fill").includes("url")) {
+            if (elem.hasAttribute("fill") &&
+                elem.getAttribute("fill") != "none" &&
+                elem.getAttribute("fill") != "" &&
+                !elem.getAttribute("fill").includes("url")) {
                 var id = `${tag}${++i}`;
                 var check = checkForExist(tag, elem.getAttribute("fill"), fills)
                 if (!check.hasOwnProperty("id")) {
@@ -144,26 +145,28 @@ function findSolidColorSvgElems(document) {
                     elem.setAttribute("id", check.id)
                     console.log(`${check.id} has same color as a previous ${tag}`);
                 }
-            } else if (elem.style.fill
-                && elem.style.getPropertyValue("fill") != ""
-                && elem.style.getPropertyValue("fill") != "none"
-                && !elem.style.getPropertyValue("fill").includes("url")) {
+            } else if (elem.style.fill &&
+                elem.style.getPropertyValue("fill") != "" &&
+                elem.style.getPropertyValue("fill") != "none" &&
+                !elem.style.getPropertyValue("fill").includes("url")) {
+                elem.setAttribute("fill", elem.style.getPropertyValue("fill"));
+                elem.style.setProperty("fill", "");
                 var id = `${tag}${++i}`;
-                var check = checkForExist(tag, convertToRGBA(elem.style.getPropertyValue("fill")), fills)
+                var check = checkForExist(tag, convertToRGBA(elem.getAttribute("fill")), fills)
                 if (!check.hasOwnProperty("id")) {
                     elem.setAttribute("id", id);
                     fills.push({
                         id: id,
-                        color: convertToRGBA(elem.style.getPropertyValue("fill"))
+                        color: convertToRGBA(elem.getAttribute("fill"))
                     });
                 } else {
                     elem.setAttribute("id", check.id)
                     console.log(`${check.id} has same color as a previous ${tag}`);
                 }
-            } else if (elem.hasAttribute("stroke")
-                && elem.getAttribute("stroke") != ""
-                && elem.getAttribute("stroke") != "none"
-                && !elem.getAttribute("stroke").includes("url")) {
+            } else if (elem.hasAttribute("stroke") &&
+                elem.getAttribute("stroke") != "" &&
+                elem.getAttribute("stroke") != "none" &&
+                !elem.getAttribute("stroke").includes("url")) {
                 var id = `${tag}${++i}`;
                 var check = checkForExist(tag, convertToRGBA(elem.getAttribute("stroke")), strokes)
                 if (!check.hasOwnProperty("id")) {
@@ -176,17 +179,19 @@ function findSolidColorSvgElems(document) {
                     elem.setAttribute("id", check.id)
                     console.log(`${check.id} has same color as a previous ${tag}`);
                 }
-            } else if (elem.style.stroke
-                && elem.style.getPropertyValue("stroke") != ""
-                && elem.style.getPropertyValue("stroke") != "none"
-                && !elem.style.getPropertyValue("stroke").includes("url")) {
+            } else if (elem.style.stroke &&
+                elem.style.getPropertyValue("stroke") != "" &&
+                elem.style.getPropertyValue("stroke") != "none" &&
+                !elem.style.getPropertyValue("stroke").includes("url")) {
+                elem.setAttribute("stroke", elem.style.getPropertyValue("stroke"));
+                elem.style.setProperty("stroke", "");
                 var id = `${tag}${++i}`;
-                var check = checkForExist(tag, convertToRGBA(elem.style.getPropertyValue("stroke")), strokes)
+                var check = checkForExist(tag, convertToRGBA(elem.getAttribute("stroke")), strokes)
                 if (!check.hasOwnProperty("id")) {
                     elem.setAttribute("id", id);
                     strokes.push({
                         id: id,
-                        color: convertToRGBA(elem.style.getPropertyValue("stroke"))
+                        color: convertToRGBA(elem.getAttribute("stroke"))
                     });
                 } else {
                     elem.setAttribute("id", check.id)
@@ -214,7 +219,7 @@ function checkForExist(tag, color, fills) {
 }
 
 // compare two objects or compare two arrays of objects
-var isEqual = function (value, other) {
+var isEqual = function(value, other) {
 
     // Get the value type
     var type = Object.prototype.toString.call(value);
@@ -231,7 +236,7 @@ var isEqual = function (value, other) {
     if (valueLen !== otherLen) return false;
 
     // Compare two items
-    var compare = function (item1, item2) {
+    var compare = function(item1, item2) {
 
         // Get the object type
         var itemType = Object.prototype.toString.call(item1);
