@@ -84,7 +84,7 @@ function findGradientColorsSvgElems(document) {
                             stop.setAttribute("id", check.id)
                             console.log(`${check.id} has same color as a previous ${tag}`);
                         }
-                    } else if (stop.style.hasOwnProperty("stop-color")
+                    } else if (stop.style['stop-color']
                         && stop.style.getPropertyValue("stop-color") != ""
                         && stop.style.getPropertyValue("stop-color") != "none"
                         && !stop.style.getPropertyValue("stop-color").includes("url")) {
@@ -128,10 +128,6 @@ function findSolidColorSvgElems(document) {
         var elems = document.getElementsByTagName(tag)
         for (var elem of elems) {
             // can be improved furthur
-            console.log(elem.style.hasOwnProperty("fill")
-                , elem.style.getPropertyValue("fill")
-                , elem.style.getPropertyValue("fill") != "none"
-                , !elem.style.getPropertyValue("fill").includes("url"))
             if (elem.hasAttribute("fill")
                 && elem.getAttribute("fill") != "none"
                 && elem.getAttribute("fill") != ""
@@ -148,7 +144,7 @@ function findSolidColorSvgElems(document) {
                     elem.setAttribute("id", check.id)
                     console.log(`${check.id} has same color as a previous ${tag}`);
                 }
-            } else if (elem.style.hasOwnProperty("fill")
+            } else if (elem.style.fill
                 && elem.style.getPropertyValue("fill") != ""
                 && elem.style.getPropertyValue("fill") != "none"
                 && !elem.style.getPropertyValue("fill").includes("url")) {
@@ -180,10 +176,10 @@ function findSolidColorSvgElems(document) {
                     elem.setAttribute("id", check.id)
                     console.log(`${check.id} has same color as a previous ${tag}`);
                 }
-            } else if (elem.style.hasOwnProperty("stroke")
+            } else if (elem.style.stroke
                 && elem.style.getPropertyValue("stroke") != ""
-                && elem.getPropertyValue("stroke") != "none"
-                && !elem.getPropertyValue("stroke").includes("url")) {
+                && elem.style.getPropertyValue("stroke") != "none"
+                && !elem.style.getPropertyValue("stroke").includes("url")) {
                 var id = `${tag}${++i}`;
                 var check = checkForExist(tag, convertToRGBA(elem.style.getPropertyValue("stroke")), strokes)
                 if (!check.hasOwnProperty("id")) {
@@ -285,7 +281,6 @@ var isEqual = function (value, other) {
 function convertToRGBA(color) {
     var rgba = Color(color).object();
     rgba.a = 1;
-    console.log(rgba)
     return rgba;
 }
 
