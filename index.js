@@ -1,5 +1,7 @@
 const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
+const {
+    JSDOM
+} = jsdom;
 const fs = require('fs');
 var Color = require('color');
 // verify the input file argument
@@ -9,15 +11,24 @@ if (process.argv[2]) {
             var svg = fs.readFileSync(__dirname + "/" + `${process.argv[2]}`);
             var dom = new JSDOM(svg);
             var solid_cols = findSolidColorSvgElems(dom.window.document);
-            var { fills, strokes } = solid_cols;
+            var {
+                fills,
+                strokes
+            } = solid_cols;
             var gradients = findGradientColorsSvgElems(dom.window.document);
-            var { stops } = gradients;
+            var {
+                stops
+            } = gradients;
             var svg_elem = dom.window.document.getElementsByTagName('svg')[0];
             svg_elem.removeAttribute("width");
             svg_elem.removeAttribute("height");
             var updated_svg_path = "updated_svg.svg";
             fs.writeFileSync(updated_svg_path, svg_elem.outerHTML);
-            fs.writeFileSync("svg_json.json", JSON.stringify({ fills, strokes, stops }))
+            fs.writeFileSync("svg_json.json", JSON.stringify({
+                fills,
+                strokes,
+                stops
+            }))
             console.log({
                 output_svg: __dirname + "\\" + updated_svg_path,
                 output_json: __dirname + "\\" + "svg_json.json"
@@ -57,7 +68,7 @@ var gradient_tag_list = [
 
 // find all the gradients present in the svg
 function findGradientColorsSvgElems(document) {
-    var result_stops = [];
+    var result_stops = {};
     var i = 0;
     var j = 0;
     gradient_tag_list.forEach((tag) => {
@@ -65,7 +76,7 @@ function findGradientColorsSvgElems(document) {
         for (var gradient of gradients) {
             var stops = gradient.getElementsByTagName("stop")
             if (stops && stops.length > 0) {
-                var stop_list = []
+                var stop_list = {}
                 for (var stop of stops) {
                     if (stop.hasAttribute("stop-color") &&
                         stop.getAttribute("stop-color") != "none" &&
@@ -75,10 +86,10 @@ function findGradientColorsSvgElems(document) {
                         var check = checkForExist(tag, convertToRGBA(stop.getAttribute("stop-color")), stop_list)
                         if (!check.hasOwnProperty("id")) {
                             stop.setAttribute("id", id);
-                            stop_list.push({
+                            stop_list[id] = {
                                 id: id,
                                 color: convertToRGBA(stop.getAttribute("stop-color"))
-                            });
+                            };
                         } else {
                             stop.setAttribute("id", check.id)
                             console.log(`${check.id} has same color as a previous ${tag}`);
@@ -93,10 +104,10 @@ function findGradientColorsSvgElems(document) {
                         var check = checkForExist(tag, convertToRGBA(stop.getAttribute("stop-color")), stop_list)
                         if (!check.hasOwnProperty("id")) {
                             stop.setAttribute("id", id);
-                            stop_list.push({
+                            stop_list[id] = {
                                 id: id,
                                 color: convertToRGBA(stop.getAttribute("stop-color"))
-                            });
+                            };
                         } else {
                             stop.setAttribute("id", check.id)
                             console.log(`${check.id} has same color as a previous ${tag}`);
@@ -105,25 +116,27 @@ function findGradientColorsSvgElems(document) {
                         console.log(`${tag}${++j} has no color`);
                     }
                 }
-                if (stop_list.length > 0) {
-                    result_stops.push({
+                if (Object.keys(stop_list).length > 0) {
+                    result_stops[gradient.getAttribute("id")] = {
                         id: gradient.getAttribute("id"),
                         stops: stop_list
-                    });
+                    };
                 }
             } else {
                 console.log(`${gradient.getAttribute("id")} has no stop(s)`)
             }
         }
     })
-    return { stops: result_stops }
+    return {
+        stops: result_stops
+    }
 }
 
 
 // find all the unique solid colors from the svg
 function findSolidColorSvgElems(document) {
-    var fills = [],
-        strokes = [];
+    var fills = {},
+        strokes = {};
     var i = 0;
     solid_col_tag_list.forEach((tag) => {
         var elems = document.getElementsByTagName(tag)
@@ -134,13 +147,13 @@ function findSolidColorSvgElems(document) {
                 elem.getAttribute("fill") != "" &&
                 !elem.getAttribute("fill").includes("url")) {
                 var id = `${tag}${++i}`;
-                var check = checkForExist(tag, elem.getAttribute("fill"), fills)
+                var check = checkForExist(tag, convertToRGBA(elem.getAttribute("fill")), fills)
                 if (!check.hasOwnProperty("id")) {
                     elem.setAttribute("id", id);
-                    fills.push({
+                    fills[id] = {
                         id: id,
                         color: convertToRGBA(elem.getAttribute("fill"))
-                    });
+                    };
                 } else {
                     elem.setAttribute("id", check.id)
                     console.log(`${check.id} has same color as a previous ${tag}`);
@@ -155,10 +168,10 @@ function findSolidColorSvgElems(document) {
                 var check = checkForExist(tag, convertToRGBA(elem.getAttribute("fill")), fills)
                 if (!check.hasOwnProperty("id")) {
                     elem.setAttribute("id", id);
-                    fills.push({
+                    fills[id] = {
                         id: id,
                         color: convertToRGBA(elem.getAttribute("fill"))
-                    });
+                    };
                 } else {
                     elem.setAttribute("id", check.id)
                     console.log(`${check.id} has same color as a previous ${tag}`);
@@ -171,10 +184,10 @@ function findSolidColorSvgElems(document) {
                 var check = checkForExist(tag, convertToRGBA(elem.getAttribute("stroke")), strokes)
                 if (!check.hasOwnProperty("id")) {
                     elem.setAttribute("id", id);
-                    strokes.push({
+                    strokes[id] = {
                         id: id,
                         color: convertToRGBA(elem.getAttribute("stroke"))
-                    });
+                    };
                 } else {
                     elem.setAttribute("id", check.id)
                     console.log(`${check.id} has same color as a previous ${tag}`);
@@ -189,10 +202,10 @@ function findSolidColorSvgElems(document) {
                 var check = checkForExist(tag, convertToRGBA(elem.getAttribute("stroke")), strokes)
                 if (!check.hasOwnProperty("id")) {
                     elem.setAttribute("id", id);
-                    strokes.push({
+                    strokes[id] = {
                         id: id,
                         color: convertToRGBA(elem.getAttribute("stroke"))
-                    });
+                    };
                 } else {
                     elem.setAttribute("id", check.id)
                     console.log(`${check.id} has same color as a previous ${tag}`);
@@ -202,17 +215,20 @@ function findSolidColorSvgElems(document) {
             }
         }
     });
-    return { fills: fills, strokes: strokes }
+    return {
+        fills: fills,
+        strokes: strokes
+    }
 }
 
 
 // check whether the color already exits in the respective array
 function checkForExist(tag, color, fills) {
-    for (var fill of fills) {
-        if (isEqual(fill.color, color)) {
-            fill
-            console.log(isEqual(fill.color, color));
-            return { id: fill.id };
+    for (var key in fills) {
+        if (isEqual(fills[key].color, color)) {
+            return {
+                id: key
+            };
         }
     }
     return false;
