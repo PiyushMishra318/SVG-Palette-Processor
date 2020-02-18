@@ -154,13 +154,13 @@ function findSolidColorSvgElems(document, defs) {
                 var check = checkForExist(tag, convertToRGBA(color), fills)
                 if (!check.hasOwnProperty("id")) {
                     defs.appendChild(createDefElement(document, color, id))
-                    elem.setAttribute("fill", `url("#gradient-${id}")`);
+                    elem.setAttribute("fill", `url(#gradient-${id})`);
                     fills[id] = {
                         id: id,
                         color: convertToRGBA(color)
                     };
                 } else {
-                    elem.setAttribute("fill", `url("#gradient-${check.id}")`);
+                    elem.setAttribute("fill", `url(#gradient-${check.id})`);
                     console.log(`${check.id} has same color as a previous ${tag}`);
                 }
             } else if (elem.style.fill &&
