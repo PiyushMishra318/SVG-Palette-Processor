@@ -20,9 +20,6 @@ if (process.argv[2]) {
                 fills,
                 strokes
             } = solid_cols;
-            var {
-                stops
-            } = gradients;
             svg_elem.removeAttribute("width");
             svg_elem.removeAttribute("height");
             var updated_svg_path = "updated_svg.svg";
@@ -30,7 +27,7 @@ if (process.argv[2]) {
             fs.writeFileSync("svg_json.json", JSON.stringify({
                 fills,
                 strokes,
-                stops
+                gradients
             }))
             console.log({
                 output_svg: __dirname + "\\" + updated_svg_path,
@@ -46,6 +43,7 @@ if (process.argv[2]) {
 }
 
 var solid_col_tag_list = [
+    "g",
     "altGlyph",
     "circle",
     "ellipse",
@@ -136,6 +134,73 @@ function findGradientColorsSvgElems(document) {
 }
 
 
+function findSolidColor(document, defs, property_list, property_name, tag, i, elem) {
+    if (elem.hasAttribute(property_name) &&
+        elem.getAttribute(property_name) != "none" &&
+        elem.getAttribute(property_name) != "" &&
+        !elem.getAttribute(property_name).includes("url")) {
+        var color = elem.getAttribute(property_name)
+        var id = `${tag}${++i}`;
+        var check = checkForExist(tag, convertToRGBA(color), property_list)
+        if (!check.hasOwnProperty("id")) {
+            defs.appendChild(createDefElement(document, color, id))
+            elem.setAttribute(property_name, `url(#gradient-${id})`);
+            property_list[id] = {
+                id: id,
+                color: convertToRGBA(color)
+            };
+        } else {
+            elem.setAttribute(property_name, `url(#gradient-${check.id})`);
+            console.log(`${check.id} has same color as a previous ${tag}`);
+        }
+    } else if (elem.hasAttribute(property_name) &&
+        elem.getAttribute(property_name).includes("url")) {
+        var ref = elem.getAttribute(property_name)
+        var val = ref.substring(5, ref.length - 1);
+        console.log(val)
+        var id = `${tag}${++i}`;
+        property_list[id] = {
+            id: id,
+            reference: val
+        };
+    } else if (elem.style[property_name] &&
+        elem.style.getPropertyValue(property_name) != "" &&
+        elem.style.getPropertyValue(property_name) != "none" &&
+        !elem.style.getPropertyValue(property_name).includes("url")) {
+        var color = elem.style.getPropertyValue(property_name)
+        var id = `${tag}${++i}`;
+        var check = checkForExist(tag, convertToRGBA(color), property_list)
+        if (!check.hasOwnProperty("id")) {
+            defs.appendChild(createDefElement(document, color, id))
+            elem.setAttribute(property_name, `url(#gradient-${id})`);
+            elem.style.setProperty(property_name, "");
+            property_list[id] = {
+                id: id,
+                color: convertToRGBA(color)
+            };
+        } else {
+            elem.setAttribute(property_name, `url(#gradient-${check.id})`);
+            elem.style.setProperty(property_name, "");
+            console.log(`${check.id} has same color as a previous ${tag}`);
+        }
+    } else if (elem.style[property_name] && elem.style.getPropertyValue(property_name).includes("url")) {
+        elem.setAttribute(property_name, elem.style.getPropertyValue(property_name));
+        var ref = elem.style.getPropertyValue(property_name)
+        var val = ref.substring(5, ref.length - 1);
+        elem.style.setProperty(property_name, "");
+        console.log(val)
+        var id = `${tag}${++i}`;
+        property_list[id] = {
+            id: id,
+            reference: val
+        };
+    } else {
+        console.log(`${tag}${++i} has no color`);
+    }
+    return i
+}
+
+
 // find all the unique solid colors from the svg
 function findSolidColorSvgElems(document, defs) {
     var fills = {},
@@ -144,95 +209,8 @@ function findSolidColorSvgElems(document, defs) {
     solid_col_tag_list.forEach((tag) => {
         var elems = document.getElementsByTagName(tag)
         for (var elem of elems) {
-            // can be improved furthur
-            if (elem.hasAttribute("fill") &&
-                elem.getAttribute("fill") != "none" &&
-                elem.getAttribute("fill") != "" &&
-                !elem.getAttribute("fill").includes("url")) {
-                var color = elem.getAttribute("fill")
-                var id = `${tag}${++i}`;
-                var check = checkForExist(tag, convertToRGBA(color), fills)
-                if (!check.hasOwnProperty("id")) {
-                    defs.appendChild(createDefElement(document, color, id))
-                    elem.setAttribute("fill", `url(#gradient-${id})`);
-                    fills[id] = {
-                        id: id,
-                        color: convertToRGBA(color)
-                    };
-                } else {
-                    elem.setAttribute("fill", `url(#gradient-${check.id})`);
-                    console.log(`${check.id} has same color as a previous ${tag}`);
-                }
-            } else if (elem.style.fill &&
-                elem.style.getPropertyValue("fill") != "" &&
-                elem.style.getPropertyValue("fill") != "none" &&
-                !elem.style.getPropertyValue("fill").includes("url")) {
-                var color = elem.style.getPropertyValue("fill")
-                var id = `${tag}${++i}`;
-                var check = checkForExist(tag, convertToRGBA(color), fills)
-                if (!check.hasOwnProperty("id")) {
-                    defs.appendChild(createDefElement(document, color, id))
-                    elem.setAttribute("fill", `url(#gradient-${id})`);
-                    elem.style.setProperty("fill", "");
-                    fills[id] = {
-                        id: id,
-                        color: convertToRGBA(color)
-                    };
-                } else {
-                    elem.setAttribute("fill", `url(#gradient-${check.id})`);
-                    elem.style.setProperty("fill", "");
-                    console.log(`${check.id} has same color as a previous ${tag}`);
-                }
-            } else if (elem.style.fill && elem.style.getPropertyValue("fill").includes("url")) {
-                elem.setAttribute("fill", elem.style.getPropertyValue("fill"));
-                elem.style.setProperty("fill", "");
-            } else {
-                console.log(`${tag}${++i} has no color`);
-            }
-            if (elem.hasAttribute("stroke") &&
-                elem.getAttribute("stroke") != "" &&
-                elem.getAttribute("stroke") != "none" &&
-                !elem.getAttribute("stroke").includes("url")) {
-                var color = elem.getAttribute("stroke")
-                var id = `${tag}${++i}`;
-                var check = checkForExist(tag, convertToRGBA(color), strokes)
-                if (!check.hasOwnProperty("id")) {
-                    defs.appendChild(createDefElement(document, color, id))
-                    elem.setAttribute("stroke", `url(#gradient-${id})`);
-                    strokes[id] = {
-                        id: id,
-                        color: convertToRGBA(color)
-                    };
-                } else {
-                    elem.setAttribute("stroke", `url(#gradient-${check.id})`);
-                    console.log(`${check.id} has same color as a previous ${tag}`);
-                }
-            } else if (elem.style.stroke &&
-                elem.style.getPropertyValue("stroke") != "" &&
-                elem.style.getPropertyValue("stroke") != "none" &&
-                !elem.style.getPropertyValue("stroke").includes("url")) {
-                var color = elem.style.getPropertyValue("stroke")
-                var id = `${tag}${++i}`;
-                var check = checkForExist(tag, convertToRGBA(color), strokes)
-                if (!check.hasOwnProperty("id")) {
-                    defs.appendChild(createDefElement(document, color, id))
-                    elem.setAttribute("stroke", `url(#gradient-${id})`);
-                    elem.style.setProperty("stroke", "");
-                    strokes[id] = {
-                        id: id,
-                        color: convertToRGBA(color)
-                    };
-                } else {
-                    elem.setAttribute("stroke", `url(#gradient-${check.id})`);
-                    elem.style.setProperty("stroke", "");
-                    console.log(`${check.id} has same color as a previous ${tag}`);
-                }
-            } else if (elem.style.fill && elem.style.getPropertyValue("stroke").includes("url")) {
-                elem.setAttribute("stroke", elem.style.getPropertyValue("stroke"));
-                elem.style.setProperty("stroke", "");
-            } else {
-                console.log(`${tag}${++i} has no color`);
-            }
+            i = findSolidColor(document, defs, fills, "fill", tag, i, elem);
+            i = findSolidColor(document, defs, strokes, "stroke", tag, i, elem);
         }
     });
     return {
