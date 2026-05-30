@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node bin/svg-processor.js",
-    "test": "node --test test/**/*.test.js"
+    "test": "node --test test/*.test.js"
   },
   "keywords": [
     "svg",
