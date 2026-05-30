@@ -107,6 +107,11 @@ dist
 .vscode-test
 
 
-#exclude svgs
+# Generated outputs
+updated_svg.svg
+svg_json.json
 
+# Ignore stray SVGs but keep fixtures
 *.svg
+!fixtures/
+!fixtures/**

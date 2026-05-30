@@ -1,114 +1,72 @@
-<p align="center">
-  <a href="" rel="noopener">
- <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
-</p>
+# SVG Palette Processor
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18-green.svg)](package.json)
 
-<h3 align="center">svg_color_detector</h3>
+Parse SVG files, extract **fills**, **strokes**, and **gradient stops** into a JSON palette, and rewrite solid colors as reusable `linearGradient` definitions for design-tooling workflows.
 
-<div align="center">
+## Features
 
-[![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+- Normalizes fill/stroke colors to RGBA objects
+- Deduplicates identical colors across elements
+- Preserves existing gradient references
+- Writes an updated SVG plus a structured palette JSON
 
-</div>
+## Requirements
 
----
+- Node.js 18+
 
-<p align="center"> Few lines describing your project.
-    <br> 
-</p>
+## Install
 
-## 📝 Table of Contents
-
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
-- [Built Using](#built_using)
-- [TODO](../TODO.md)
-- [Contributing](../CONTRIBUTING.md)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgement)
-
-## 🧐 About <a name = "about"></a>
-
-Write about 1-2 paragraphs describing the purpose of your project.
-
-## 🏁 Getting Started <a name = "getting_started"></a>
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-What things you need to install the software and how to install them.
-
-```
-Give examples
+```bash
+git clone git@github.com:PiyushMishra318/SVG_Processor.git
+cd SVG_Processor
+npm install
 ```
 
-### Installing
+## CLI
 
-A step by step series of examples that tell you how to get a development env running.
-
-Say what the step will be
-
-```
-Give the example
+```bash
+node bin/svg-processor.js fixtures/input.svg
+# or after npm link / npm install -g
+svg-processor fixtures/input.svg -o updated_svg.svg -j svg_json.json
 ```
 
-And repeat
+Outputs:
 
-```
-until finished
-```
+| File | Description |
+|------|-------------|
+| `updated_svg.svg` | SVG with `<defs id="generated_def">` and `url(#gradient-*)` references |
+| `svg_json.json` | Palette: `fills`, `strokes`, `gradients`, `obsoleteGradients` |
 
-End with an example of getting some data out of the system or using it for a little demo.
+## Library API
 
-## 🔧 Running the tests <a name = "tests"></a>
+```javascript
+const { processSvg, processSvgFile } = require('./src/svg-processor');
 
-Explain how to run the automated tests for this system.
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
+const { svg, palette } = processSvgFile('fixtures/input.svg');
+// or
+const result = processSvg(fs.readFileSync('input.svg', 'utf8'));
 ```
 
-### And coding style tests
+## Development
 
-Explain what these tests test and why
-
-```
-Give an example
+```bash
+npm test
 ```
 
-## 🎈 Usage <a name="usage"></a>
+## Project layout
 
-Add notes about how to use the system.
+```text
+src/
+  svg-processor.js   # Core parser and rewriter
+bin/
+  svg-processor.js   # CLI entry point
+test/
+  svg-processor.test.js
+fixtures/
+  input.svg          # Sample SVG for tests
+```
 
-## 🚀 Deployment <a name = "deployment"></a>
+## License
 
-Add additional notes about how to deploy this on a live system.
-
-## ⛏️ Built Using <a name = "built_using"></a>
-
-- [MongoDB](https://www.mongodb.com/) - Database
-- [Express](https://expressjs.com/) - Server Framework
-- [VueJs](https://vuejs.org/) - Web Framework
-- [NodeJs](https://nodejs.org/en/) - Server Environment
-
-## ✍️ Authors <a name = "authors"></a>
-
-- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
-
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
-
-## 🎉 Acknowledgements <a name = "acknowledgement"></a>
-
-- Hat tip to anyone whose code was used
-- Inspiration
-- References
+MIT © 2026 [Piyush Mishra](https://github.com/PiyushMishra318)

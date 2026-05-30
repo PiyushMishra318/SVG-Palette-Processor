@@ -1,16 +1,29 @@
 {
-  "name": "svg_color_detector",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "svg-processor",
+  "version": "2.0.0",
+  "description": "Extract SVG fill/stroke palettes and normalize solid colors into gradient definitions",
+  "main": "src/svg-processor.js",
+  "bin": {
+    "svg-processor": "bin/svg-processor.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "scripts": {
+    "start": "node bin/svg-processor.js",
+    "test": "node --test test/**/*.test.js"
+  },
+  "keywords": [
+    "svg",
+    "color",
+    "palette",
+    "gradient",
+    "jsdom"
+  ],
+  "author": "Piyush Mishra <piyush_mishra31@outlook.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "color": "^3.1.2",
-    "jsdom": "^16.1.0"
+    "color": "^4.2.3",
+    "jsdom": "^26.1.0"
   }
 }
