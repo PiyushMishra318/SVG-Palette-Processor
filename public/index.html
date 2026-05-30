@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Extract SVG fill and stroke palettes into JSON and normalize colors as gradient definitions." />
+  <title>SVG Palette Processor</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="header"><div class="header__inner">
+    <span class="badge">CLI · Node.js</span>
+    <h1>SVG Palette Processor</h1>
+    <p>Parse SVG files, extract fills, strokes, and gradient stops into a JSON palette, and rewrite solid colors as reusable linearGradient definitions.</p>
+  </div></header>
+  <main class="main">
+    <section class="card">
+      <h2>CLI usage</h2>
+      <pre>npm install
+node bin/svg-processor.js fixtures/input.svg
+# or
+svg-processor input.svg -o updated.svg -j palette.json</pre>
+      <p>Outputs an updated SVG with <code>&lt;defs id="generated_def"&gt;</code> and a structured palette JSON.</p>
+      <div class="actions">
+        <a class="btn" href="https://github.com/PiyushMishra318/SVG-Palette-Processor">View on GitHub</a>
+      </div>
+    </section>
+    <section class="card">
+      <h2>Try it locally</h2>
+      <p>Clone the repo, run the CLI on any SVG, and inspect <code>svg_json.json</code> for fills, strokes, gradients, and obsolete gradient references.</p>
+    </section>
+  </main>
+  <footer class="footer"><p>MIT © 2026 · <a href="https://piyushm.dev">piyushm.dev</a></p></footer>
+</body>
+</html>
