@@ -1,4 +1,4 @@
-# SVG Palette Processor
+# SVG-Palette-Processor
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-green.svg)](package.json)
 
@@ -18,8 +18,8 @@ Parse SVG files, extract **fills**, **strokes**, and **gradient stops** into a J
 ## Install
 
 ```bash
-git clone git@github.com:PiyushMishra318/SVG_Processor.git
-cd SVG_Processor
+git clone git@github.com:PiyushMishra318/SVG-Palette-Processor.git
+cd SVG-Palette-Processor
 npm install
 ```
 
