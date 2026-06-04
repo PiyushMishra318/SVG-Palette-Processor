@@ -10,9 +10,9 @@
   <title>SVG Palette Processor</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
-<body class="theme-palette portfolio-designed landing-page">
+<body class="theme-palette portfolio-designed landing-v2 landing-page">
   <div class="bg-animation" aria-hidden="true"></div>
-  <header class="header landing-hero">
+  <header class="header landing-hero landing-hero--split">
         <div class="header__top">
       <a class="header__brand" href="https://piyushm.dev">piyushm.dev</a>
       <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle color theme" title="Toggle theme"><span class="theme-toggle__icon theme-toggle__icon--sun" aria-hidden="true">&#9728;</span><span class="theme-toggle__icon theme-toggle__icon--moon" aria-hidden="true">&#9789;</span></button>
@@ -23,23 +23,21 @@
     <p>Parse SVG files, extract fills, strokes, and gradient stops into a JSON palette, and rewrite solid colors as reusable linearGradient definitions.</p>
   
       <a class="header__github" href="https://github.com/PiyushMishra318/SVG-Palette-Processor" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-    </div></header>
+    </div><aside class="hero-panel hero-panel--terminal" aria-hidden="true">
+      <span class="hero-panel__label">Overview</span>
+      <pre class="hero-panel__content">SVG Palette Processor</pre>
+    </aside>
+  </header>
   <main class="page-main main">
-    <section class="card">
-      <h2>CLI usage</h2>
-      <pre>npm install
-node bin/svg-processor.js fixtures/input.svg
-# or
-svg-processor input.svg -o updated.svg -j palette.json</pre>
-      <p>Outputs an updated SVG with <code>&lt;defs id="generated_def"&gt;</code> and a structured palette JSON.</p>
-      <div class="actions">
-        <a class="btn" href="https://github.com/PiyushMishra318/SVG-Palette-Processor">View on GitHub</a>
-      </div>
+    <div class="stat-strip"><div class="stat-strip__item"><span class="stat-strip__value">CLI</span><span class="stat-strip__label">Node.js</span></div><div class="stat-strip__item"><span class="stat-strip__value">Batch</span><span class="stat-strip__label">Folder walks</span></div><div class="stat-strip__item"><span class="stat-strip__value">Export</span><span class="stat-strip__label">Palette JSON</span></div></div>
+    
+    
+    
+    <section class="cta-band">
+      <div><strong>Ready to try it?</strong><p>Source and releases live on GitHub — install locally for the full experience.</p></div>
+      <div class="actions"><a class="btn" href="https://github.com/PiyushMishra318/SVG-Palette-Processor">View on GitHub</a><a class="btn btn--ghost" href="https://github.com/PiyushMishra318/SVG-Palette-Processor">Source</a></div>
     </section>
-    <section class="card">
-      <h2>Try it locally</h2>
-      <p>Clone the repo, run the CLI on any SVG, and inspect <code>svg_json.json</code> for fills, strokes, gradients, and obsolete gradient references.</p>
-    </section>
+    
   </main>
   <footer class="site-footer footer"><p>MIT © 2026 · <a href="https://piyushm.dev">piyushm.dev</a> · <a href="https://github.com/PiyushMishra318/SVG-Palette-Processor" target="_blank" rel="noopener noreferrer">View on GitHub</a></p></footer>
   <script src="/theme.js"></script>

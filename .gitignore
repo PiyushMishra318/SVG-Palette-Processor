@@ -115,3 +115,4 @@ svg_json.json
 *.svg
 !fixtures/
 !fixtures/**
+.vercel
