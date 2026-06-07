@@ -1,6 +1,6 @@
 # Author's Note (NOT AI GENERATED)
 
-> I am not even sure what this. I remember making this for an internal parsing tool for canva competitor I was building at a startup. I don't think its very useful for anything. But definitely something new I got to build at the time.
+> I am not even sure what this. I remember making this for an internal parsing tool for a canva competitor I was building at a startup. I don't think its very useful for anything. But definitely something new I got to build at the time.
 > Probably going to archive this.
 
 # SVG-Palette-Processor
